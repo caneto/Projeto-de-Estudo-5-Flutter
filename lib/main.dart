@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'Lista de Tarefas',
     theme: ThemeData(
       primarySwatch: Colors.blue,
