@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -27,6 +28,17 @@ class _HomeState extends State<Home> {
 
   List _toDoList = [];
 
+  @override
+  void initState() {
+    super.initState();
+
+    _readData().then((data) => {
+      setState(() {
+        _toDoList = json.decode(data!);
+      })
+    });
+  }
+
   void _addToDo() {
     setState(() {
       Map<String, dynamic> newTodo = Map();
@@ -34,6 +46,8 @@ class _HomeState extends State<Home> {
       _toDoController.text = "";
       newTodo['ok'] = false;
       _toDoList.add(newTodo);
+
+      _saveData();
     });
   }
 
@@ -76,12 +90,17 @@ class _HomeState extends State<Home> {
                 itemBuilder: (context, index) {
                   return CheckboxListTile(
                     title: Text(_toDoList[index]["title"]),
-                    value: _toDoList[index]["ok"],
+                    value: _toDoList[index]['ok'],
                     secondary: CircleAvatar(
-                      child: Icon(_toDoList[index]["ok"] ?
+                      child: Icon(_toDoList[index]['ok'] ?
                         Icons.check : Icons.error),
                     ),
-                    onChanged: (bool? value) {  },
+                    onChanged: (c) {
+                      setState(() {
+                        _toDoList[index]['ok'] = c;
+                        _saveData();
+                      });
+                    },
                   );
                 }),
 
